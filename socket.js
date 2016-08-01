@@ -13,7 +13,7 @@ var server = net.createServer(function(socket){
         console.log(data);
         var msg = data.replace(/\[/ig, "\n[");
 
-        var filename = config.FILE_DIR + socket.remoteAddress.replace(/\.|\:/ig, "_");
+        var filename = config.FILE_DIR + socket.remoteAddress.replace(/\.|\:/ig, "_") + '_' + socket.remotePort;
         fsx.ensureFileSync(filename);
         fsx.appendFile(filename, msg, function (err) {
             if(err) {
