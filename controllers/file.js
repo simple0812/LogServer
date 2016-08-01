@@ -6,10 +6,8 @@ var request = require('request');
 var Promise = require('bluebird');
 var jsonHelper = require('../utils/jsonHelper');
 var logger = require('../utils/logger');
-var exec = require('child_process').exec;
-var spawn = require('child_process').spawn;
-var child_process = require('child_process');
 var shell = require('shelljs');
+var moment = require('moment');
 
 exports.render = function(req, res, next) {
   res.render('file');
@@ -118,6 +116,12 @@ exports.page = function(req, res, next) {
         files = files.filter(each => {return each.indexOf(keyword) != -1;});
       }
 
-      res.json(jsonHelper.pageSuccess(files.splice(firNum, pageSize).map(each => {return {filename : each, id:each}}), files.length));
+      res.json(jsonHelper.pageSuccess(files.splice(firNum, pageSize).map(each => {
+        var fileState = fs.statSync(config.FILE_DIR + each);
+        var now = moment();
+        var lastModifyTime = moment(fileState.mtime);
+        //console.log(now.format('YYYY-MM-DD HH:mm:ss'), lastModifyTime.format('YYYY-MM-DD HH:mm:ss'))
+        return {filename : each, id:each, isRunning: now.diff(lastModifyTime, 'seconds') < 5 ?'运行' : '停止'};
+      }), files.length));
     });
 };
