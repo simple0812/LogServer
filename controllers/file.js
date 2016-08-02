@@ -128,7 +128,7 @@ exports.page = function(req, res, next) {
           id:each,
           ctime: moment(fileState.ctime).format('YYYY-MM-DD HH:mm:ss'),
           size :fileSize(fileState.size),
-          isRunning: now.diff(lastModifyTime, 'seconds') < 5 ?'运行' : '停止'};
+          isRunning: now.diff(lastModifyTime, 'seconds') < 60 ?'运行' : '停止'};
       }), files.length));
     });
 };
