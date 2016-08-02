@@ -57,11 +57,17 @@
                         <th style="width:30px">
                             <input type='checkbox' class='checkbox' chk-item chk-type='all'  />
                         </th>
-                        <th class="col-xs-4" style="cursor:pointer" ng-click="orderColumn='age'; orderMode=!orderMode">
+                        <th class="col-xs-2" style="cursor:pointer" ng-click="orderColumn='age'; orderMode=!orderMode">
                             名称
                         </th>
-                        <th class="col-xs-4" style="cursor:pointer" ng-click="orderColumn='age'; orderMode=!orderMode">
+                        <th class="col-xs-2" style="cursor:pointer" ng-click="orderColumn='age'; orderMode=!orderMode">
                             状态
+                        </th>
+                        <th class="col-xs-2" style="cursor:pointer" ng-click="orderColumn='age'; orderMode=!orderMode">
+                            创建时间
+                        </th>
+                        <th class="col-xs-2" style="cursor:pointer" ng-click="orderColumn='age'; orderMode=!orderMode">
+                            大小
                         </th>
                         <th class="col-xs-3">操作</th>
                     </tr>
@@ -71,8 +77,10 @@
                         <td style="width: 30px">
                             <input type="checkbox" chk-item class='checkbox' data-id='{{model.id}}' value='{{model.id}}' ng-model='model.selStatus' />
                         </td>
-                        <td class="col-xs-4" ng-bind="model.filename"></td>
-                        <td class="col-xs-4" ng-bind="model.isRunning"></td>
+                        <td class="col-xs-2" ng-bind="model.filename"></td>
+                        <td class="col-xs-2" ng-bind="model.isRunning"></td>
+                        <td class="col-xs-2" ng-bind="model.ctime"></td>
+                        <td class="col-xs-2" ng-bind="model.size"></td>
                         <td class="col-xs-3">
                             <a class="gap" href="javascript:void(0)" ng-click="remove(this, $target.event)" id="{{model.id}}">删除</a>
                             <a class="gap" href="/file/log/v?name={{model.filename}}">查看</a>

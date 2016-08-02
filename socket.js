@@ -1,6 +1,7 @@
 var net = require('net');
 var fsx = require('fs-extra');
 var config = require('./config');
+var fileSize = require('filesize');
 
 var timeout = 20000;//超时
 var listenPort = 3000;//监听端口

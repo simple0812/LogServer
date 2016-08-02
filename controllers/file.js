@@ -8,6 +8,8 @@ var jsonHelper = require('../utils/jsonHelper');
 var logger = require('../utils/logger');
 var shell = require('shelljs');
 var moment = require('moment');
+var fileSize = require('filesize');
+
 
 exports.render = function(req, res, next) {
   res.render('file');
@@ -120,8 +122,13 @@ exports.page = function(req, res, next) {
         var fileState = fs.statSync(config.FILE_DIR + each);
         var now = moment();
         var lastModifyTime = moment(fileState.mtime);
-        //console.log(now.format('YYYY-MM-DD HH:mm:ss'), lastModifyTime.format('YYYY-MM-DD HH:mm:ss'))
-        return {filename : each, id:each, isRunning: now.diff(lastModifyTime, 'seconds') < 5 ?'运行' : '停止'};
+
+        return {
+          filename : each,
+          id:each,
+          ctime: moment(fileState.ctime).format('YYYY-MM-DD HH:mm:ss'),
+          size :fileSize(fileState.size),
+          isRunning: now.diff(lastModifyTime, 'seconds') < 5 ?'运行' : '停止'};
       }), files.length));
     });
 };
