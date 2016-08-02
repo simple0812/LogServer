@@ -12,9 +12,14 @@ var server = net.createServer(function(socket){
     socket.on('data',function(data){
         if(!data) return;
         console.log(data);
-        var msg = data.replace(/\[/ig, "\n[");
+        var reg = /\[[^\[]*\|/ig;
+        var localIps = data.match(reg) || ['[default|'];
+        var localIp = localIps[0].slice(1,-1);
 
-        var filename = config.FILE_DIR + socket.remoteAddress.replace(/\.|\:/ig, "_") + '_' + socket.remotePort;
+
+        var msg = data.replace(reg, "\n[");
+
+        var filename = config.FILE_DIR + localIp;
         fsx.ensureFileSync(filename);
         fsx.appendFile(filename, msg, function (err) {
             if(err) {
