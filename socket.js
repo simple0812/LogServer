@@ -9,13 +9,16 @@ var listenPort = 3000;//监听端口
 var server = net.createServer(function(socket){
     socket.setEncoding('binary');
 
+    socket.localIp = 'default';
     socket.on('data',function(data){
         if(!data) return;
         console.log(data);
         var reg = /\[[^\[]*\|/ig;
         var localIps = data.match(reg) || ['[default|'];
         var localIp = localIps[0].slice(1,-1);
-
+        if(socket.localIp == 'default' && localIp!= 'default') {
+            socket.localIp = localIp;
+        }
 
         var msg = data.replace(reg, "\n[");
 
