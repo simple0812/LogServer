@@ -17,12 +17,12 @@ var server = net.createServer(function(socket){
         var localIps = data.match(reg) || ['[default|'];
         var localIp = localIps[0].slice(1,-1);
         if(socket.localIp == 'default' && localIp!= 'default') {
-            socket.localIp = localIp;
+            socket.localIp = localIp.replace(/\./ig, '_');
         }
 
         var msg = data.replace(reg, "\n[");
 
-        var filename = config.FILE_DIR + localIp;
+        var filename = config.FILE_DIR + socket.localIp;
         fsx.ensureFileSync(filename);
         fsx.appendFile(filename, msg, function (err) {
             if(err) {
