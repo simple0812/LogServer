@@ -42,6 +42,8 @@ exports.readLog = function(req, res, next) {
   var line = +req.query.line || 20;
   var filename = `${config.FILE_DIR}${name}`;
 
+  fsx.ensureFileSync(filename);
+
   var result =shell.tail({'-n': line}, filename);
   res.json(jsonHelper.getSuccess(result));
 };
