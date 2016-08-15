@@ -2,6 +2,7 @@ var net = require('net');
 var fsx = require('fs-extra');
 var config = require('./config');
 var fileSize = require('filesize');
+var shell = require('shelljs');
 
 var timeout = 20000;//超时
 var listenPort = 3000;//监听端口
@@ -12,7 +13,7 @@ var server = net.createServer(function(socket){
     socket.localIp = 'default';
     socket.on('data',function(data){
         if(!data) return;
-        console.log(data);
+        // console.log(data);
         var reg = /\[[^\[]*\|/ig;
         var localIps = data.match(reg) || ['[default|'];
         var localIp = localIps[0].slice(1,-1);
@@ -24,11 +25,13 @@ var server = net.createServer(function(socket){
 
         var filename = config.FILE_DIR + socket.localIp;
         fsx.ensureFileSync(filename);
-        fsx.appendFile(filename, msg, function (err) {
-            if(err) {
-              console.log(err.message);
-            }
-        });
+        
+        try {
+            var x = shell.echo(msg).toEnd(filename);
+        } catch (e) {
+            console.log(e.message);
+        }
+
     });
 
     //数据错误事件
