@@ -39,7 +39,7 @@
                     $('#content').html(data.message);
                 } else {
 
-                    $('#content').html(data.result.replace(/\n/ig, '<br/>'));
+                    $('#content').html(data.result.replace(/\n+/ig, '<br/>'));
                 }
             })
         }
