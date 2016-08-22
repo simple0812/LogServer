@@ -21,10 +21,7 @@ function set(key, val, isReplace) {
 	}
 
 	if(cache[key]) {
-		cache[key].push(val);
-		if(cache[key].length > 20) {
-			cache[key] = cache[key].slice(-20);
-		}
+		cache[key] = cache[key].concat(val.split('\n')).slice(-20);
 	} else {
 		cache[key] =val.split('\n');
 	}
