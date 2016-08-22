@@ -9,6 +9,7 @@ var logger = require('../utils/logger');
 var shell = require('shelljs');
 var moment = require('moment');
 var fileSize = require('filesize');
+var cache = require('../utils/cacheHelper');
 
 
 exports.render = function(req, res, next) {
@@ -46,9 +47,14 @@ exports.readLog = function(req, res, next) {
 
     fsx.ensureFileSync(filename);
 
+    var x = cache.getByKey(name);
+    if(x && x.length) {
+        return res.json(jsonHelper.getSuccess(x));
+    }
     var result = shell.tail({
         '-n': line
     }, filename);
+    cache.set(name, result, true);
     res.json(jsonHelper.getSuccess(result));
 };
 

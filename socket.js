@@ -3,6 +3,7 @@ var fsx = require('fs-extra');
 var config = require('./config');
 var fileSize = require('filesize');
 var shell = require('shelljs');
+var cache = require('./utils/cacheHelper');
 
 var timeout = 20000;//超时
 var listenPort = 3000;//监听端口
@@ -28,6 +29,7 @@ var server = net.createServer(function(socket){
         
         try {
             var x = shell.echo(msg).toEnd(filename);
+            cache.set(socket.localIp, msg);
         } catch (e) {
             console.log(e.message);
         }
