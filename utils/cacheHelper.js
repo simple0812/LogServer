@@ -25,10 +25,10 @@ function set(key, val, isReplace) {
 		if(cache[key].length >= 20) {
 			cache[key].shift();
 		}
+	} else {
+		cache[key] = [];
+		cache[key].push(val);
 	}
-
-	cache[key] = [];
-	cache[key].push(val);
 }
 
 module.exports = {
