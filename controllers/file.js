@@ -49,7 +49,7 @@ exports.readLog = function(req, res, next) {
 
     var x = cache.getByKey(name);
     if(x && x.length) {
-        return res.json(jsonHelper.getSuccess(x));
+        return res.json(jsonHelper.getSuccess(x.join('')));
     }
     var result = shell.tail({
         '-n': line
