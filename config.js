@@ -1,6 +1,7 @@
 module.exports = {
 	ROOT: __dirname,
-	PORT: 3004,
+	PORT: 6004,
+	LOG_SOCKET_PORT : 6002,
 	FILE_DIR : __dirname + '/files/',
 
 	DB: {

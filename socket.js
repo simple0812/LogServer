@@ -6,7 +6,7 @@ var shell = require('shelljs');
 var cache = require('./utils/cacheHelper');
 
 var timeout = 20000;//超时
-var listenPort = 3000;//监听端口
+var listenPort = process.env.LOG_SOCKET_PORT || config.LOG_SOCKET_PORT;//监听端口
 
 var server = net.createServer(function(socket){
     socket.setEncoding('binary');
