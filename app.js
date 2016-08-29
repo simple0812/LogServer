@@ -46,6 +46,7 @@ if (env == 'development') {
 	});
 }
 
-app.listen(config.PORT, function() {
-	console.log("listening on port " + config.PORT + ', env ' + env);
+var xPort = process.env.LOG_PORT || config.PORT;
+app.listen(xPort, function() {
+	console.log("listening on port " + xPort + ', env ' + env);
 });
