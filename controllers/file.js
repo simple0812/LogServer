@@ -137,18 +137,26 @@ exports.page = function(req, res, next) {
             });
         }
 
-        res.json(jsonHelper.pageSuccess(files.splice(firNum, pageSize).map(each => {
-            var fileState = fs.statSync(config.FILE_DIR + each);
-            var now = moment();
-            var lastModifyTime = moment(fileState.mtime);
+        var ret = [];
 
-            return {
-                filename: each,
-                id: each,
-                ctime: moment(fileState.ctime).format('YYYY-MM-DD HH:mm:ss'),
-                size: fileSize(fileState.size),
-                isRunning: now.diff(lastModifyTime, 'seconds') < 65 ? '运行' : '停止'
-            };
-        }), files.length));
+        files.splice(firNum, pageSize).forEach(function(each) {
+            try {
+                var fileState = fs.statSync(config.FILE_DIR + each);
+                var now = moment();
+                var lastModifyTime = moment(fileState.mtime);
+
+                ret.push({
+                    filename: each,
+                    id: each,
+                    ctime: moment(fileState.ctime).format('YYYY-MM-DD HH:mm:ss'),
+                    size: fileSize(fileState.size),
+                    isRunning: now.diff(lastModifyTime, 'seconds') < 65 ? '运行' : '停止'
+                });
+            } catch (e) {
+
+            }
+        });
+           
+        res.json(jsonHelper.pageSuccess(ret), files.length);
     });
 };
