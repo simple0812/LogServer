@@ -157,6 +157,6 @@ exports.page = function(req, res, next) {
             }
         });
            
-        res.json(jsonHelper.pageSuccess(ret), files.length);
+        res.json(jsonHelper.pageSuccess(ret, files.length));
     });
 };
