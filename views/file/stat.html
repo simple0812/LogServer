@@ -43,6 +43,7 @@
                                     labels: xdata.time,
                                     datasets: [{
                                         label: '# temperature',
+                                        pointRadius: 0,
                                         data: xdata.temperature,
                                         backgroundColor: [
                                             'rgba(255, 99, 132, 0.2)',
@@ -64,12 +65,9 @@
                                     }]
                                 },
                                 options: {
-                                    scales: {
-                                        yAxes: [{
-                                            ticks: {
-                                                beginAtZero: true
-                                            }
-                                        }]
+                                    hover: {
+                                        // Overrides the global setting
+                                        mode: 'label'
                                     }
                                 }
                             });
