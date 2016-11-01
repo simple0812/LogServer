@@ -33,9 +33,10 @@
                 <script>
                     $(function() {
                         var step = common.getQueryString('step') || 1;
+                        var max = common.getQueryString('max') || 100;
                         var name = common.getQueryString('name') || '';
                         if (!name) return;
-                        $.getJSON(`/file/stat?name=${name}&step=${step}`, function(xdata) {
+                        $.getJSON(`/file/stat?name=${name}&step=${step}&max=${max}`, function(xdata) {
                             var ctx = document.getElementById("myChart");
                             var myChart = new Chart(ctx, {
                                 type: 'line',
