@@ -5,6 +5,8 @@ var apiCtrl = require('../controllers/file');
 router.get('/', apiCtrl.render);
 router.get('/file/v', apiCtrl.render);
 router.get('/file/log/v', apiCtrl.renderLog);
+router.get('/file/stat/v', apiCtrl.renderStat);
+router.get('/file/stat', apiCtrl.stat);
 
 router.get('/writeLog', apiCtrl.writeLog);
 router.get('/readLog', apiCtrl.readLog);

@@ -1,2 +1,1 @@
-exports.Article = require('./article');
-exports.User = require('./user');
+exports.Iot = require('./iot');

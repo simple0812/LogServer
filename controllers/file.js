@@ -10,6 +10,7 @@ var shell = require('shelljs');
 var moment = require('moment');
 var fileSize = require('filesize');
 var cache = require('../utils/cacheHelper');
+var proxy = require('../proxy/');
 
 
 exports.render = function(req, res, next) {
@@ -18,6 +19,20 @@ exports.render = function(req, res, next) {
 
 exports.renderLog = function(req, res, next) {
     res.render('file/log');
+};
+
+exports.renderStat = function(req, res, next) {
+    res.render('file/stat');
+};
+
+exports.stat = function(req, res, next) {
+    var step = +req.query.step || 1;
+    var name = req.query.name;
+
+    console.log(step)
+
+    if (step < 0) step = 1;
+    res.json(proxy.Iot.resolveTemperature(name, step));
 };
 
 exports.writeLog = function(req, res, next) {
@@ -48,7 +63,7 @@ exports.readLog = function(req, res, next) {
     fsx.ensureFileSync(filename);
 
     var x = cache.getByKey(name);
-    if(x && x.length) {
+    if (x && x.length) {
         return res.json(jsonHelper.getSuccess(x.join('\n')));
     }
     var result = shell.tail({
@@ -156,7 +171,7 @@ exports.page = function(req, res, next) {
 
             }
         });
-           
+
         res.json(jsonHelper.pageSuccess(ret, files.length));
     });
 };
