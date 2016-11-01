@@ -28,11 +28,10 @@ exports.renderStat = function(req, res, next) {
 exports.stat = function(req, res, next) {
     var step = +req.query.step || 1;
     var name = req.query.name;
-
-    console.log(step)
+    var max = +req.query.max || 100;
 
     if (step < 0) step = 1;
-    res.json(proxy.Iot.resolveTemperature(name, step));
+    res.json(proxy.Iot.resolveTemperature(name, step, max));
 };
 
 exports.writeLog = function(req, res, next) {
