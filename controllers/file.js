@@ -26,17 +26,20 @@ exports.renderStat = function(req, res, next) {
 };
 
 exports.stat = function(req, res, next) {
-    var step = +req.query.step || 1;
+    var step = +req.query.step || 100;
     var name = req.query.name;
     var max = +req.query.max || 100;
     var min = +req.query.min || 0;
     var type = +req.query.type || 3;
+    var startTime = req.query.starttime;
+    var endTime = req.query.endtime;
+
     if (step < 0) step = 1;
 
     if (type == 4) {
-        res.json(proxy.Iot.resolve04Temperature(name, step, max, min));
+        res.json(proxy.Iot.resolve04Temperature(name, step, max, min, startTime, endTime));
     } else {
-        res.json(proxy.Iot.resolveTemperature(name, step, max, min));
+        res.json(proxy.Iot.resolveTemperature(name, step, max, min, startTime, endTime));
     }
 };
 

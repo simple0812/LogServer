@@ -1,6 +1,6 @@
 var shell = require('shelljs');
 
-exports.resolveTemperature = function(name, step, max, min) {
+exports.resolveTemperature = function(name, step, max, min, startTime, endTime) {
     console.time('x')
     step = step || 1000;
     max = max || 100;
@@ -20,6 +20,14 @@ exports.resolveTemperature = function(name, step, max, min) {
         var x = resolveStr(each, max, min);
 
         if (!x) continue;
+        if (startTime && startTime > x.time) {
+            continue;
+        }
+
+        if (endTime && endTime < x.time) {
+            continue;
+        }
+
         var xtime = x.time.split(' ');
         if (currYearDate != xtime[0]) {
             currYearDate = xtime[0];
@@ -35,7 +43,7 @@ exports.resolveTemperature = function(name, step, max, min) {
     return xdata;
 }
 
-exports.resolve04Temperature = function(name, step, max, min) {
+exports.resolve04Temperature = function(name, step, max, min, startTime, endTime) {
     console.time('x')
     step = step || 1000;
     max = max || 100;
@@ -57,6 +65,14 @@ exports.resolve04Temperature = function(name, step, max, min) {
         var x = resolve04Str(each, max, min);
 
         if (!x) continue;
+                if (startTime && startTime > x.time) {
+            continue;
+        }
+
+        if (endTime && endTime < x.time) {
+            continue;
+        }
+
         var xtime = x.time.split(' ');
         if (currYearDate != xtime[0]) {
             currYearDate = xtime[0];
