@@ -87,7 +87,7 @@ function resolve04Str(str, max) {
         ret.data2 = parseInt(data[0].slice(13, 19).split(',').join(''), 16) / 10;
     }
 
-    return ret.time && ret.data && ret.data <= max ? ret : null;
+    return ret.time && ret.data && ret.data <= max && ret.data2 <= max ? ret : null;
 }
 
 // var x = resolve04Str('[2016-10-31 13:45:09.488 Info] receive ->90,04,00,d3,00,da,00,c9,00,0c,02,5f,1d<- receive end');
