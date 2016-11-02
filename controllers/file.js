@@ -29,13 +29,14 @@ exports.stat = function(req, res, next) {
     var step = +req.query.step || 1;
     var name = req.query.name;
     var max = +req.query.max || 100;
+    var min = +req.query.min || 0;
     var type = +req.query.type || 3;
     if (step < 0) step = 1;
 
     if (type == 4) {
-        res.json(proxy.Iot.resolve04Temperature(name, step, max));
+        res.json(proxy.Iot.resolve04Temperature(name, step, max, min));
     } else {
-        res.json(proxy.Iot.resolveTemperature(name, step, max));
+        res.json(proxy.Iot.resolveTemperature(name, step, max, min));
     }
 };
 
