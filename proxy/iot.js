@@ -44,7 +44,8 @@ exports.resolve04Temperature = function(name, step, max, min) {
     var xdata = {
         time: [],
         temperature: [],
-        temperature2: []
+        temperature2: [],
+        temperature3: []
     };
     console.timeEnd('x')
 
@@ -66,6 +67,7 @@ exports.resolve04Temperature = function(name, step, max, min) {
 
         xdata.temperature.push(x.data);
         xdata.temperature2.push(x.data2);
+        xdata.temperature3.push(x.data3);
     }
     console.timeEnd('y')
 
@@ -86,14 +88,17 @@ function resolve04Str(str, max, min) {
     if (data && data[0]) {
         ret.data = parseInt(data[0].slice(8, 13).split(',').join(''), 16) / 10;
         ret.data2 = parseInt(data[0].slice(13, 19).split(',').join(''), 16) / 10;
+        ret.data3 = parseInt(data[0].slice(19, 25).split(',').join(''), 16) / 10;
     }
 
-    return ret.time && ret.data && ret.data <= max &&
-        ret.data >= min && ret.data2 >= min && ret.data2 <= max ? ret : null;
+    return ret.time && ret.data &&
+        ret.data <= max && ret.data >= min &&
+        ret.data2 >= min && ret.data2 <= max &&
+        ret.data3 >= min && ret.data3 <= max ? ret : null;
 }
 
-// var x = resolve04Str('[2016-10-31 13:45:09.488 Info] receive ->90,04,00,d3,00,da,00,c9,00,0c,02,5f,1d<- receive end');
-// console.log(x)
+var x = resolve04Str('[2016-10-31 13:45:09.488 Info] receive ->90,04,00,d3,00,da,00,c9,00,0c,02,5f,1d<- receive end');
+console.log(x)
 
 function resolveStr(str, max, min) {
     max = max || 100;
