@@ -1,5 +1,6 @@
 var net = require('net');
 var fsx = require('fs-extra');
+var fs = require('fs');
 var config = require('./config');
 var fileSize = require('filesize');
 var shell = require('shelljs');
