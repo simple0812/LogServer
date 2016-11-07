@@ -5,20 +5,20 @@ var fileSize = require('filesize');
 var shell = require('shelljs');
 var cache = require('./utils/cacheHelper');
 
-var timeout = 20000;//超时
-var listenPort = process.env.LOG_SOCKET_PORT || config.LOG_SOCKET_PORT;//监听端口
+var timeout = 20000; //超时
+var listenPort = process.env.LOG_SOCKET_PORT || config.LOG_SOCKET_PORT; //监听端口
 
-var server = net.createServer(function(socket){
+var server = net.createServer(function(socket) {
     socket.setEncoding('binary');
 
     socket.localIp = 'default';
-    socket.on('data',function(data){
-        if(!data) return;
+    socket.on('data', function(data) {
+        if (!data) return;
         // console.log(data);
         var reg = /\[[^\[]*\|/ig;
         var localIps = data.match(reg) || ['[default|'];
-        var localIp = localIps[0].slice(1,-1);
-        if(socket.localIp == 'default' && localIp!= 'default') {
+        var localIp = localIps[0].slice(1, -1);
+        if (socket.localIp == 'default' && localIp != 'default') {
             socket.localIp = localIp.replace(/\./ig, '_');
         }
 
@@ -26,10 +26,15 @@ var server = net.createServer(function(socket){
 
         var filename = config.FILE_DIR + socket.localIp;
         fsx.ensureFileSync(filename);
-        
+
         try {
-            var x = shell.echo(msg).toEnd(filename);
-            cache.set(socket.localIp, msg);
+
+            fs.appendFile(filename, msg, function(err) {
+                if (err) return console.log(err.message);
+                cache.set(socket.localIp, msg);
+            });
+            // var x = shell.echo(msg).toEnd(filename);
+            // cache.set(socket.localIp, msg);
         } catch (e) {
             console.log(e.message);
         }
@@ -37,12 +42,12 @@ var server = net.createServer(function(socket){
     });
 
     //数据错误事件
-    socket.on('error',function(exception){
+    socket.on('error', function(exception) {
         console.log('socket error:' + exception);
         socket.end();
     });
     //客户端关闭事件
-    socket.on('close',function(data){
+    socket.on('close', function(data) {
         console.log('close: ' +
             socket.remoteAddress + ' ' + socket.remotePort);
 
@@ -51,11 +56,11 @@ var server = net.createServer(function(socket){
 }).listen(listenPort);
 
 //服务器监听事件
-server.on('listening',function(){
+server.on('listening', function() {
     console.log("server listening:" + server.address().port);
 });
 
 //服务器错误事件
-server.on("error",function(exception){
+server.on("error", function(exception) {
     console.log("server error:" + exception);
 });

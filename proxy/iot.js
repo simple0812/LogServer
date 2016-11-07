@@ -65,7 +65,7 @@ exports.resolve04Temperature = function(name, step, max, min, startTime, endTime
         var x = resolve04Str(each, max, min);
 
         if (!x) continue;
-                if (startTime && startTime > x.time) {
+        if (startTime && startTime > x.time) {
             continue;
         }
 
@@ -112,9 +112,6 @@ function resolve04Str(str, max, min) {
         ret.data2 >= min && ret.data2 <= max &&
         ret.data3 >= min && ret.data3 <= max ? ret : null;
 }
-
-var x = resolve04Str('[2016-10-31 13:45:09.488 Info] receive ->90,04,00,d3,00,da,00,c9,00,0c,02,5f,1d<- receive end');
-console.log(x)
 
 function resolveStr(str, max, min) {
     max = max || 100;
