@@ -43,7 +43,8 @@ exports.resolveTemperature = function(name, step, max, min, startTime, endTime) 
     return xdata;
 }
 
-exports.resolve04Temperature = function(name, step, max, min, startTime, endTime) {
+exports.resolve04Temperature = function(name, step, max, min, startTime, endTime, exclude) {
+    exclude = exclude.split(',').map(each => +each);
     console.time('x')
     step = step || 1000;
     max = max || 100;
@@ -62,7 +63,7 @@ exports.resolve04Temperature = function(name, step, max, min, startTime, endTime
     for (var i = 0; i < arr.length; i += step) {
         var each = arr[i];
         if (!each) continue;
-        var x = resolve04Str(each, max, min);
+        var x = resolve04Str(each, max, min, exclude);
 
         if (!x) continue;
         if (startTime && startTime > x.time) {
@@ -90,7 +91,7 @@ exports.resolve04Temperature = function(name, step, max, min, startTime, endTime
     return xdata;
 }
 
-function resolve04Str(str, max, min) {
+function resolve04Str(str, max, min, exclude) {
     max = max || 100;
     min = min || 0;
     var ret = {}
@@ -102,15 +103,19 @@ function resolve04Str(str, max, min) {
     var data = str.match(/-\>90,04.+(?=\<)/)
 
     if (data && data[0]) {
-        ret.data = parseInt(data[0].slice(8, 13).split(',').join(''), 16) / 10;
-        ret.data2 = parseInt(data[0].slice(13, 19).split(',').join(''), 16) / 10;
-        ret.data3 = parseInt(data[0].slice(19, 25).split(',').join(''), 16) / 10;
+        if (exclude.indexOf(1) == -1)
+            ret.data = parseInt(data[0].slice(8, 13).split(',').join(''), 16) / 10;
+        if (exclude.indexOf(2) == -1)
+            ret.data2 = parseInt(data[0].slice(13, 19).split(',').join(''), 16) / 10;
+        if (exclude.indexOf(3) == -1)
+            ret.data3 = parseInt(data[0].slice(19, 25).split(',').join(''), 16) / 10;
     }
 
-    return ret.time && ret.data &&
-        ret.data <= max && ret.data >= min &&
-        ret.data2 >= min && ret.data2 <= max &&
-        ret.data3 >= min && ret.data3 <= max ? ret : null;
+    return ret.time &&
+        (ret.data === undefined || (ret.data <= max && ret.data >= min)) &&
+        (ret.data2 === undefined || (ret.data2 <= max && ret.data2 >= min)) &&
+        (ret.data3 === undefined || (ret.data3 <= max && ret.data3 >= min)) ?
+        ret : null;
 }
 
 function resolveStr(str, max, min) {

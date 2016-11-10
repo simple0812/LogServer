@@ -33,11 +33,12 @@ exports.stat = function(req, res, next) {
     var type = +req.query.type || 3;
     var startTime = req.query.starttime;
     var endTime = req.query.endtime;
+    var exclude = req.query.exclude || '';
 
     if (step < 0) step = 1;
 
     if (type == 4) {
-        res.json(proxy.Iot.resolve04Temperature(name, step, max, min, startTime, endTime));
+        res.json(proxy.Iot.resolve04Temperature(name, step, max, min, startTime, endTime, exclude));
     } else {
         res.json(proxy.Iot.resolveTemperature(name, step, max, min, startTime, endTime));
     }
