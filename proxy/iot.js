@@ -13,13 +13,19 @@ exports.resolveTemperature = function(name, step, max, min, startTime, endTime) 
     console.timeEnd('x')
 
     console.time('y');
-    var currYearDate = '';
     for (var i = 0; i < arr.length; i += step) {
         var each = arr[i];
         if (!each) continue;
         var x = resolveStr(each, max, min);
 
-        if (!x) continue;
+        if (x.isEvil) {
+            if (!placeholder) {
+                continue;
+            } else {
+                x.data = null;
+            }
+        }
+
         if (startTime && startTime > x.time) {
             continue;
         }
@@ -28,14 +34,7 @@ exports.resolveTemperature = function(name, step, max, min, startTime, endTime) 
             continue;
         }
 
-        var xtime = x.time.split(' ');
-        if (currYearDate != xtime[0]) {
-            currYearDate = xtime[0];
-            xdata.time.push(x.time);
-        } else {
-            xdata.time.push(xtime[1]);
-        }
-
+        xdata.time.push(x.time);
         xdata.temperature.push(x.data);
     }
     console.timeEnd('y')
@@ -43,7 +42,7 @@ exports.resolveTemperature = function(name, step, max, min, startTime, endTime) 
     return xdata;
 }
 
-exports.resolve04Temperature = function(name, step, max, min, startTime, endTime, exclude) {
+exports.resolve04Temperature = function(name, step, max, min, startTime, endTime, exclude, placeholder) {
     exclude = exclude.split(',').map(each => +each);
     console.time('x')
     step = step || 1000;
@@ -59,13 +58,21 @@ exports.resolve04Temperature = function(name, step, max, min, startTime, endTime
     console.timeEnd('x')
 
     console.time('y');
-    var currYearDate = '';
     for (var i = 0; i < arr.length; i += step) {
         var each = arr[i];
         if (!each) continue;
         var x = resolve04Str(each, max, min, exclude);
 
-        if (!x) continue;
+        if (x.isEvil) {
+            if (!placeholder) {
+                continue;
+            } else {
+                x.data = null;
+                x.data2 = null;
+                x.data3 = null;
+            }
+        }
+
         if (startTime && startTime > x.time) {
             continue;
         }
@@ -74,14 +81,7 @@ exports.resolve04Temperature = function(name, step, max, min, startTime, endTime
             continue;
         }
 
-        var xtime = x.time.split(' ');
-        if (currYearDate != xtime[0]) {
-            currYearDate = xtime[0];
-            xdata.time.push(x.time);
-        } else {
-            xdata.time.push(xtime[1]);
-        }
-
+        xdata.time.push(x.time);
         xdata.temperature.push(x.data);
         xdata.temperature2.push(x.data2);
         xdata.temperature3.push(x.data3);
@@ -111,11 +111,16 @@ function resolve04Str(str, max, min, exclude) {
             ret.data3 = parseInt(data[0].slice(19, 25).split(',').join(''), 16) / 10;
     }
 
-    return ret.time &&
+    if (ret.time &&
         (ret.data === undefined || (ret.data <= max && ret.data >= min)) &&
         (ret.data2 === undefined || (ret.data2 <= max && ret.data2 >= min)) &&
-        (ret.data3 === undefined || (ret.data3 <= max && ret.data3 >= min)) ?
-        ret : null;
+        (ret.data3 === undefined || (ret.data3 <= max && ret.data3 >= min))) {
+        return ret;
+    } else {
+        ret.isEvil = true;
+        return ret;
+    }
+
 }
 
 function resolveStr(str, max, min) {
@@ -134,5 +139,10 @@ function resolveStr(str, max, min) {
         ret.data = parseInt(data[0].slice(8, 13).split(',').join(''), 16) / 10;
     }
 
-    return ret.time && ret.data && ret.data <= max && ret.data >= min ? ret : null;
+    if (ret.time && ret.data && ret.data <= max && ret.data >= min) {
+        return ret;
+    } else {
+        ret.isEvil = true;
+        return ret;
+    }
 }

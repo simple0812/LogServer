@@ -34,13 +34,14 @@ exports.stat = function(req, res, next) {
     var startTime = req.query.starttime;
     var endTime = req.query.endtime;
     var exclude = req.query.exclude || '';
+    var placeholder = req.query.placeholder || false;
 
     if (step < 0) step = 1;
 
     if (type == 4) {
-        res.json(proxy.Iot.resolve04Temperature(name, step, max, min, startTime, endTime, exclude));
+        res.json(proxy.Iot.resolve04Temperature(name, step, max, min, startTime, endTime, exclude, placeholder));
     } else {
-        res.json(proxy.Iot.resolveTemperature(name, step, max, min, startTime, endTime));
+        res.json(proxy.Iot.resolveTemperature(name, step, max, min, startTime, endTime, placeholder));
     }
 };
 
