@@ -1,6 +1,6 @@
 var shell = require('shelljs');
 
-exports.resolveTemperature = function(name, step, max, min, startTime, endTime) {
+exports.resolveTemperature = function(name, step, max, min, startTime, endTime, placeholder) {
     console.time('x')
     step = step || 1000;
     max = max || 100;
