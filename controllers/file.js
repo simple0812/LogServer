@@ -40,6 +40,8 @@ exports.stat = function(req, res, next) {
 
     if (type == 4) {
         res.json(proxy.Iot.resolve04Temperature(name, step, max, min, startTime, endTime, exclude, placeholder));
+    } else if (type == 9) {
+        res.json(proxy.Iot.resolve09Temperature(name, step, max, min, startTime, endTime, exclude, placeholder));
     } else {
         res.json(proxy.Iot.resolveTemperature(name, step, max, min, startTime, endTime, placeholder));
     }
