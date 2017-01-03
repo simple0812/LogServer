@@ -1,9 +1,20 @@
-var later = require('later');
-var intervalTime = 100;
+var models = require('./models');
+var db = require('./models/db');
+var Promise = require('bluebird');
 
-later.date.localTime();
-var schedule = later.parse.recur().every(1).minute();
 
-later.setInterval(function() {
-  console.log('x');
-}, schedule);
+db.sync().then(function() {
+    console.log('数据库同步成功')
+    var p = [];
+    for(var i = 0; i< 100000; i++) {
+		p.push(models.User.create({
+			userName: 'John' + i,
+		}))
+	}
+
+	Promise.all(p).then(docs => {
+		console.log('........')
+	})
+}).catch(function(err) {
+    console.log(err, '数据库同步失败')
+})
