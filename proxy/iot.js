@@ -151,6 +151,7 @@ exports.resolve09Temperature = function(name, step, max, min, startTime, endTime
     exclude = exclude.split(',').map(each => +each);
     console.time('x')
     step = step || 1000;
+    if(step % 2 ==0) step +=1;
     max = max || 100;
     var p = shell.grep('receive ->90,04\|receive ->a0,04\|receive ->a1,04', './files/' + name);
     var arr = p.stdout.split('\n');
