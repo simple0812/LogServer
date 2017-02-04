@@ -166,6 +166,7 @@ exports.page = function(req, res, next) {
 
         var ret = [];
 
+        var count = files.length;
         files.splice(firNum, pageSize).forEach(function(each) {
             try {
                 var fileState = fs.statSync(config.FILE_DIR + each);
@@ -184,6 +185,6 @@ exports.page = function(req, res, next) {
             }
         });
 
-        res.json(jsonHelper.pageSuccess(ret, files.length));
+        res.json(jsonHelper.pageSuccess(ret, count));
     });
 };
