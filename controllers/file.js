@@ -38,6 +38,11 @@ exports.stat = function(req, res, next) {
 
     if (step < 0) step = 1;
 
+    if(!fs.existsSync('./files/' + name)) {
+        console.error('日志文件不存在')
+        return res.json('');
+    }
+
     if (type == 4) {
         res.json(proxy.Iot.resolve04Temperature(name, step, max, min, startTime, endTime, exclude, placeholder));
     } else if (type == 9) {

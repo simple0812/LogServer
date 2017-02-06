@@ -3,6 +3,9 @@
      var type = common.getQueryString('type') || '';
      if (!name) return;
      $.getJSON(`/file/stat${location.search}`, function(xdata) {
+        if(!xdata) {
+            return console.log('数据为空');
+        }
          var ctx = document.getElementById("myChart");
          var ctx2 = document.getElementById("myChart2");
          var ctx3 = document.getElementById("myChart3");
