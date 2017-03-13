@@ -4,7 +4,12 @@ node_modules/
 *.DS_Store
 logs/*
 files/*
+server/logs/*
+server/files/*
 start.bat
 npm-debug.log
 npm-debug.log.*
 .vscode/
+app.pid
+app-err*.log
+app-out*.log
