@@ -10,6 +10,6 @@ start.bat
 npm-debug.log
 npm-debug.log.*
 .vscode/
-app.pid
+app*.pid
 app-err*.log
 app-out*.log
