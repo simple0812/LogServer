@@ -1,10 +1,7 @@
-var Article = require('./article');
-var User = require('./user');
+var Log = require('./log');
 
 var db = require('./db');
 
-User.hasMany(Article, {foreignKey : 'uid'});
-Article.belongsTo(User, {foreignKey : 'uid'});
 
 db.sync().then(function() {
     console.log('数据库同步成功')
@@ -12,5 +9,4 @@ db.sync().then(function() {
     console.log(err, '数据库同步失败')
 })
 
-exports.Article = Article;
-exports.User = User;
+exports.Log = Log;

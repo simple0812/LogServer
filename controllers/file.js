@@ -30,7 +30,7 @@ exports.stat = function(req, res, next) {
     var name = req.query.name;
     var max = +req.query.max || 100;
     var min = +req.query.min || 0;
-    var type = +req.query.type || 3;
+    var type = +req.query.type || 4;
     var startTime = req.query.starttime;
     var endTime = req.query.endtime;
     var exclude = req.query.exclude || '';
@@ -39,18 +39,25 @@ exports.stat = function(req, res, next) {
     if (step < 0) step = 1;
 
     if (!fs.existsSync('./files/' + name)) {
-        console.error('日志文件不存在')
-        return res.json('');
+        return res.json('日志文件不存在');
     }
 
     if (type == 145) {
         res.json(proxy.Iot.resolveGas(name, step, max, min, startTime, endTime, exclude, placeholder));
     } else if (type == 4) {
-        res.json(proxy.Iot.resolve04Temperature(name, step, max, min, startTime, endTime, exclude, placeholder));
+        proxy.Iot.resolve04Temperature(name, step, max, min, startTime, endTime, exclude, placeholder).then(docs => {
+            res.json(docs);
+        }).catch(err => {
+            res.json(err.message);
+        })
     } else if (type == 9) {
-        res.json(proxy.Iot.resolve09Temperature(name, step, max, min, startTime, endTime, exclude, placeholder));
+        proxy.Iot.resolve09Temperature(name, step, max, min, startTime, endTime, exclude, placeholder).then(docs => {
+            res.json(docs);
+        }).catch(err => {
+            res.json(err.message);
+        })
     } else {
-        res.json(proxy.Iot.resolveTemperature(name, step, max, min, startTime, endTime, placeholder));
+        res.json('type error');
     }
 };
 
