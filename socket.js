@@ -10,34 +10,34 @@ var models = require('./models');
 var timeout = 20000; //超时
 var listenPort = process.env.LOG_SOCKET_PORT || config.LOG_SOCKET_PORT; //监听端口
 
-function saveLog(str, desc) {
-    var reg = /\[([^.]+)\.\d{3} Info\] receive ->(\d{2}),04[^<]+(?=\<- receive end)/;
-    var data = str.match(reg);
+// function saveLog(str, desc) {
+//     var reg = /\[([^.]+)\.\d{3} Info\] receive ->(\d{2}),04[^<]+(?=\<- receive end)/;
+//     var data = str.match(reg);
 
-    if (!data) return console.log("error");
-    var time = RegExp.$1
-    var deviceId = RegExp.$2
-    var start = str.indexOf('receive ->');
-    var end = str.indexOf('<- receive end');
+//     if (!data) return console.log("error");
+//     var time = RegExp.$1
+//     var deviceId = RegExp.$2
+//     var start = str.indexOf('receive ->');
+//     var end = str.indexOf('<- receive end');
 
-    console.log(start, end);
-    var metadata = str.slice(start + 10, end);
+//     console.log(start, end);
+//     var metadata = str.slice(start + 10, end);
 
-    var data1 = parseInt(metadata.slice(6, 11).split(',').join(''), 16) / 10;
-    var data2 = parseInt(metadata.slice(11, 17).split(',').join(''), 16) / 10;
-    var data3 = parseInt(metadata.slice(17, 23).split(',').join(''), 16) / 10;
-    console.log(desc)
-    models.Log.create({
-        description: desc,
-        createdAt: time,
-        deviceId: parseInt(deviceId, 16),
-        data1: data1,
-        data2: data2,
-        data3: data3,
-    }, { raw: true }).then(doc => {}).catch(err => {
-        console.log(err.message)
-    })
-}
+//     var data1 = parseInt(metadata.slice(6, 11).split(',').join(''), 16) / 10;
+//     var data2 = parseInt(metadata.slice(11, 17).split(',').join(''), 16) / 10;
+//     var data3 = parseInt(metadata.slice(17, 23).split(',').join(''), 16) / 10;
+//     console.log(desc)
+//     models.Log.create({
+//         description: desc,
+//         createdAt: time,
+//         deviceId: parseInt(deviceId, 16),
+//         data1: data1,
+//         data2: data2,
+//         data3: data3,
+//     }, { raw: true }).then(doc => {}).catch(err => {
+//         console.log(err.message)
+//     })
+// }
 
 var server = net.createServer(function(socket) {
     socket.setEncoding('binary');

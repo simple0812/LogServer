@@ -15,7 +15,6 @@ exports.resolve04Temperature = function(name, step, max, min, startTime, endTime
         }
 
         var stat = fs.statSync('./files/' + name);
-        console.log(stat)
         if (stat.size < 1024 * 1024) {
             step = 1;
         } else if (stat.size < 10 * 1024 * 1024) {
@@ -31,8 +30,6 @@ exports.resolve04Temperature = function(name, step, max, min, startTime, endTime
         } else {
             return reject(new Error("文件太大无法解析"));
         }
-        console.log(step)
-
         var rl = readline.createInterface({
             input: fs.createReadStream('./files/' + name),
             output: null,
@@ -131,7 +128,6 @@ exports.resolve09Temperature = function(name, step, max, min, startTime, endTime
         }
 
         var stat = fs.statSync('./files/' + name);
-        console.log(stat)
         if (stat.size < 1024 * 1024) {
             step = 1;
         } else if (stat.size < 10 * 1024 * 1024) {
@@ -147,7 +143,6 @@ exports.resolve09Temperature = function(name, step, max, min, startTime, endTime
         } else {
             return reject(new Error("文件太大无法解析"));
         }
-        console.log(step)
 
         var rl = readline.createInterface({
             input: fs.createReadStream('./files/' + name),
@@ -258,49 +253,83 @@ function resolve09Str(str, max, min, exclude) {
 }
 
 exports.resolveGas = function(name, step, max, min, startTime, endTime, exclude, placeholder) {
-    exclude = exclude.split(',').map(each => +each);
-    console.time('x')
-    step = step || 1000;
-    max = max || 100;
-    var p = shell.grep('receive ->91,04', './files/' + name)
-    var arr = p.stdout.split('\n');
-    var xdata = {
-        time: [],
-        temperature: [],
-        temperature2: []
-    };
-    console.timeEnd('x')
 
-    console.time('y');
-    for (var i = 0; i < arr.length; i += step) {
-        var each = arr[i];
-        if (!each) continue;
-        var x = resolveGasStr(each, max, min, exclude);
+    return new Promise(function(resolve, reject) {
+        exclude = exclude.split(',').map(each => +each);
+        step = step || 1000;
+        max = max || 100;
 
-        if (x.isEvil) {
-            if (!placeholder) {
-                continue;
-            } else {
-                x.data = null;
-                x.data2 = null;
+        if (!fs.existsSync('./files/' + name)) {
+            return reject(new Error("文件不存在"));
+        }
+
+        var stat = fs.statSync('./files/' + name);
+        if (stat.size < 1024 * 1024) {
+            step = 1;
+        } else if (stat.size < 10 * 1024 * 1024) {
+            step = 10;
+        } else if (stat.size < 50 * 1024 * 1024) {
+            step = 50;
+        } else if (stat.size < 100 * 1024 * 1024) {
+            step = 100;
+        } else if (stat.size < 200 * 1024 * 1024) {
+            step = 1000;
+        } else if (stat.size < 500 * 1024 * 1024) {
+            step = 10000;
+        } else {
+            return reject(new Error("文件太大无法解析"));
+        }
+
+        var rl = readline.createInterface({
+            input: fs.createReadStream('./files/' + name),
+            output: null,
+            terminal: false
+        });
+        var xdata = {
+            time: [],
+            temperature: [],
+            temperature2: []
+        };
+        var index = 0;
+        rl.on('line', function(line) {
+            var reg = /\[[^.]+\.\d{3} Info\] receive ->91,04[^<]+(?=\<- receive end)/;
+            if (line.match(reg)) {
+                index++;
+                if (index % step == 0) {
+                    var x = resolveGasStr(line, max, min, exclude);
+
+                    if (x.isEvil) {
+                        if (!placeholder) {
+                            return;
+                        } else {
+                            x.data = null;
+                            x.data2 = null;
+                        }
+                    }
+
+                    if (startTime && startTime > x.time) {
+                        return;
+                    }
+
+                    if (endTime && endTime < x.time) {
+                        return;
+                    }
+
+                    xdata.time.push(x.time);
+                    xdata.temperature.push(x.data);
+                    xdata.temperature2.push(x.data2);
+                }
             }
-        }
+        });
 
-        if (startTime && startTime > x.time) {
-            continue;
-        }
+        rl.on('close', function() {
+            return resolve(xdata);
+        });
 
-        if (endTime && endTime < x.time) {
-            continue;
-        }
-
-        xdata.time.push(x.time);
-        xdata.temperature.push(x.data);
-        xdata.temperature2.push(x.data2);
-    }
-    console.timeEnd('y')
-
-    return xdata;
+        rl.on('error', function(err) {
+            return reject(err);
+        })
+    });
 }
 
 function resolveGasStr(str, max, min, exclude) {

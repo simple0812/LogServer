@@ -10,8 +10,7 @@ var shell = require('shelljs');
 var moment = require('moment');
 var fileSize = require('filesize');
 var cache = require('../utils/cacheHelper');
-var proxy = require('../proxy/');
-
+var proxy = require('../proxy');
 
 exports.render = function(req, res, next) {
     res.render('file');
@@ -43,7 +42,11 @@ exports.stat = function(req, res, next) {
     }
 
     if (type == 145) {
-        res.json(proxy.Iot.resolveGas(name, step, max, min, startTime, endTime, exclude, placeholder));
+        proxy.Iot.resolveGas(name, step, max, min, startTime, endTime, exclude, placeholder).then(docs => {
+            res.json(docs);
+        }).catch(err => {
+            res.json(err.message);
+        })
     } else if (type == 4) {
         proxy.Iot.resolve04Temperature(name, step, max, min, startTime, endTime, exclude, placeholder).then(docs => {
             res.json(docs);
