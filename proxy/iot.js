@@ -23,10 +23,8 @@ exports.resolve04Temperature = function(name, step, max, min, startTime, endTime
             step = 50;
         } else if (stat.size < 100 * 1024 * 1024) {
             step = 100;
-        } else if (stat.size < 200 * 1024 * 1024) {
-            step = 1000;
         } else if (stat.size < 500 * 1024 * 1024) {
-            step = 10000;
+            step = 1000;
         } else {
             return reject(new Error("文件太大无法解析"));
         }
@@ -136,10 +134,8 @@ exports.resolve09Temperature = function(name, step, max, min, startTime, endTime
             step = 50;
         } else if (stat.size < 100 * 1024 * 1024) {
             step = 100;
-        } else if (stat.size < 200 * 1024 * 1024) {
-            step = 1000;
         } else if (stat.size < 500 * 1024 * 1024) {
-            step = 10000;
+            step = 1000;
         } else {
             return reject(new Error("文件太大无法解析"));
         }
@@ -272,13 +268,12 @@ exports.resolveGas = function(name, step, max, min, startTime, endTime, exclude,
             step = 50;
         } else if (stat.size < 100 * 1024 * 1024) {
             step = 100;
-        } else if (stat.size < 200 * 1024 * 1024) {
-            step = 1000;
         } else if (stat.size < 500 * 1024 * 1024) {
-            step = 10000;
+            step = 1000;
         } else {
             return reject(new Error("文件太大无法解析"));
         }
+        console.log(step);
 
         var rl = readline.createInterface({
             input: fs.createReadStream('./files/' + name),
