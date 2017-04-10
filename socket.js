@@ -39,6 +39,27 @@ var listenPort = process.env.LOG_SOCKET_PORT || config.LOG_SOCKET_PORT; //监听
 //     })
 // }
 
+function writeLog(localIp, msg, index) {
+    index = index || 0;
+    var filename = config.FILE_DIR + localIp + (index ? '_' + index : '');
+    fsx.ensureFileSync(filename);
+    var size = fs.statSync(filename).size;
+
+    if (size > 100 * 1024 * 1024) {
+        writeLog(localIp, msg, index + 1);
+        return;
+    }
+
+    try {
+        fs.appendFile(filename, msg, function(err) {
+            if (err) return console.log(err.message);
+            cache.set(localIp + (index ? '_' + index : ''), msg);
+        });
+    } catch (e) {
+        console.log(e.message);
+    }
+}
+
 var server = net.createServer(function(socket) {
     socket.setEncoding('binary');
     console.log('socket connect')
@@ -55,19 +76,7 @@ var server = net.createServer(function(socket) {
 
         var msg = data.replace(reg, "\n[");
 
-        var filename = config.FILE_DIR + socket.localIp;
-        fsx.ensureFileSync(filename);
-
-        try {
-
-            fs.appendFile(filename, msg, function(err) {
-                if (err) return console.log(err.message);
-                cache.set(socket.localIp, msg);
-            });
-        } catch (e) {
-            console.log(e.message);
-        }
-
+        writeLog(socket.localIp, msg);
     });
 
     //数据错误事件

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>日志</title>
@@ -9,6 +10,7 @@
     <script src='/js/lib/jquery.js'></script>
     <script src='/js/lib/common.js'></script>
 </head>
+
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top" id="topNav" role="navigation" style="z-index: 4;">
         <div class="container">
@@ -24,40 +26,56 @@
         </div>
     </div>
     <div class="wrap" id="wrapContainer" style="position:fixed;left:0;right:0;top:0;bottom:50px;margin:auto;overflow:auto; z-index: 3" ng-controller="controller">
-    <script>
-        $(function() {
-            readLog();
-            setInterval(readLog, 1000);
-        })
+        <script>
+            var websocket = new WebSocket(`ws://${location.hostname}:${location.port}/browser${location.search}`);
 
-        function readLog() {
-            var name = common.getQueryString('name') || 'default';
-            $.getJSON('/readLog?name=' + name, function(data) {
-                if(!data) {
-                    $('#content').html('未知的错误');
-                } else if (data.code==='error') {
-                    $('#content').html(data.message);
-                } else {
-
-                    $('#content').html(data.result.replace(/\n+/ig, '<br/>'));
+            websocket.onopen = function(evt) {
+                console.log('open');
+            };
+            websocket.onclose = function(evt) {
+                console.log('onclose');
+            };
+            websocket.onmessage = function(evt) {
+                if ($('#content').children().length > 20) {
+                    $('#content').empty();
                 }
+                $('#content').append(evt.data + '<br/>');
+            };
+            websocket.onerror = function(evt) {
+                console.log('onerror');
+            };
+            $(function() {
+                readLog();
             })
-        }
-    </script>
-    <div id="user" onselectstart="return false" class="ng-scope">
-        <div class="well well-sm">
+
+            function readLog() {
+                var name = common.getQueryString('name') || 'default';
+                $.getJSON('/readLog?name=' + name, function(data) {
+                    if (!data) {
+                        $('#content').html('未知的错误');
+                    } else if (data.code === 'error') {
+                        $('#content').html(data.message);
+                    } else {
+
+                        $('#content').html(data.result.replace(/\n+/ig, '<br/>'));
+                    }
+                })
+            }
+        </script>
+        <div id="user" onselectstart="return false" class="ng-scope">
+            <div class="well well-sm">
+                <div class="container fixed-width">
+                </div>
+            </div>
             <div class="container fixed-width">
-            </div>
-        </div>
-        <div class="container fixed-width">
-            <h3 class="pageInfo"><img src="/images/header.png" class="circlePic" />&nbsp;日志</h3>
-            <div  id='content'>
-                
+                <h3 class="pageInfo"><img src="/images/header.png" class="circlePic" />&nbsp;日志</h3>
+                <div id='content'>
+
+                </div>
             </div>
         </div>
     </div>
-    </div>
-    
+
     <div class="navbar navbar-default  input-group-addon-format navbar-fixed-bottom" role="navigation" style="z-index: 2">
         <div class="container fixed-width" style="line-height: 50px; vertical-align: middle;">
             <a class="center-block text-center" id="loginNav" href="#">2016</a>
@@ -66,6 +84,3 @@
 </body>
 
 </html>
-
-
-
