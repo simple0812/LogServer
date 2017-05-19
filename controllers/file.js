@@ -25,7 +25,7 @@ exports.renderStat = function(req, res, next) {
 };
 
 exports.stat = function(req, res, next) {
-    var step = +req.query.step || 100;
+    var step = +req.query.step || 0;
     var name = req.query.name;
     var max = +req.query.max || 100;
     var min = +req.query.min || 0;
@@ -34,8 +34,6 @@ exports.stat = function(req, res, next) {
     var endTime = req.query.endtime;
     var exclude = req.query.exclude || '';
     var placeholder = req.query.placeholder || false;
-
-    if (step < 0) step = 1;
 
     if (!fs.existsSync('./files/' + name)) {
         return res.json('日志文件不存在');

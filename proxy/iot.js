@@ -7,27 +7,29 @@ var Promise = require('bluebird');
 exports.resolve04Temperature = function(name, step, max, min, startTime, endTime, exclude, placeholder) {
     return new Promise(function(resolve, reject) {
         exclude = exclude.split(',').map(each => +each);
-        step = step || 1000;
         max = max || 100;
 
         if (!fs.existsSync('./files/' + name)) {
             return reject(new Error("文件不存在"));
         }
 
-        var stat = fs.statSync('./files/' + name);
-        if (stat.size < 1024 * 1024) {
-            step = 1;
-        } else if (stat.size < 10 * 1024 * 1024) {
-            step = 10;
-        } else if (stat.size < 50 * 1024 * 1024) {
-            step = 50;
-        } else if (stat.size < 100 * 1024 * 1024) {
-            step = 100;
-        } else if (stat.size < 500 * 1024 * 1024) {
-            step = 1000;
-        } else {
-            return reject(new Error("文件太大无法解析"));
+        if (step <= 0) {
+            var stat = fs.statSync('./files/' + name);
+            if (stat.size < 1024 * 1024) {
+                step = 1;
+            } else if (stat.size < 10 * 1024 * 1024) {
+                step = 10;
+            } else if (stat.size < 50 * 1024 * 1024) {
+                step = 50;
+            } else if (stat.size < 100 * 1024 * 1024) {
+                step = 100;
+            } else if (stat.size < 500 * 1024 * 1024) {
+                step = 1000;
+            } else {
+                return reject(new Error("文件太大无法解析"));
+            }
         }
+
         var rl = readline.createInterface({
             input: fs.createReadStream('./files/' + name),
             output: null,
@@ -118,26 +120,27 @@ function resolve04Str(str, max, min, exclude) {
 exports.resolve09Temperature = function(name, step, max, min, startTime, endTime, exclude, placeholder) {
     return new Promise(function(resolve, reject) {
         exclude = exclude.split(',').map(each => +each);
-        step = step || 1000;
         max = max || 100;
 
         if (!fs.existsSync('./files/' + name)) {
             return reject(new Error("文件不存在"));
         }
 
-        var stat = fs.statSync('./files/' + name);
-        if (stat.size < 1024 * 1024) {
-            step = 1;
-        } else if (stat.size < 10 * 1024 * 1024) {
-            step = 10;
-        } else if (stat.size < 50 * 1024 * 1024) {
-            step = 50;
-        } else if (stat.size < 100 * 1024 * 1024) {
-            step = 100;
-        } else if (stat.size < 500 * 1024 * 1024) {
-            step = 1000;
-        } else {
-            return reject(new Error("文件太大无法解析"));
+        if (step <= 0) {
+            var stat = fs.statSync('./files/' + name);
+            if (stat.size < 1024 * 1024) {
+                step = 1;
+            } else if (stat.size < 10 * 1024 * 1024) {
+                step = 10;
+            } else if (stat.size < 50 * 1024 * 1024) {
+                step = 50;
+            } else if (stat.size < 100 * 1024 * 1024) {
+                step = 100;
+            } else if (stat.size < 500 * 1024 * 1024) {
+                step = 1000;
+            } else {
+                return reject(new Error("文件太大无法解析"));
+            }
         }
 
         var rl = readline.createInterface({
@@ -252,28 +255,28 @@ exports.resolveGas = function(name, step, max, min, startTime, endTime, exclude,
 
     return new Promise(function(resolve, reject) {
         exclude = exclude.split(',').map(each => +each);
-        step = step || 1000;
         max = max || 100;
 
         if (!fs.existsSync('./files/' + name)) {
             return reject(new Error("文件不存在"));
         }
 
-        var stat = fs.statSync('./files/' + name);
-        if (stat.size < 1024 * 1024) {
-            step = 1;
-        } else if (stat.size < 10 * 1024 * 1024) {
-            step = 10;
-        } else if (stat.size < 50 * 1024 * 1024) {
-            step = 50;
-        } else if (stat.size < 100 * 1024 * 1024) {
-            step = 100;
-        } else if (stat.size < 500 * 1024 * 1024) {
-            step = 1000;
-        } else {
-            return reject(new Error("文件太大无法解析"));
+        if (step <= 0) {
+            var stat = fs.statSync('./files/' + name);
+            if (stat.size < 1024 * 1024) {
+                step = 1;
+            } else if (stat.size < 10 * 1024 * 1024) {
+                step = 10;
+            } else if (stat.size < 50 * 1024 * 1024) {
+                step = 50;
+            } else if (stat.size < 100 * 1024 * 1024) {
+                step = 100;
+            } else if (stat.size < 500 * 1024 * 1024) {
+                step = 1000;
+            } else {
+                return reject(new Error("文件太大无法解析"));
+            }
         }
-        console.log(step);
 
         var rl = readline.createInterface({
             input: fs.createReadStream('./files/' + name),
