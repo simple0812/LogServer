@@ -89,14 +89,9 @@ exports.readLog = function(req, res, next) {
 
     fsx.ensureFileSync(filename);
 
-    var x = cache.getByKey(name);
-    if (x && x.length) {
-        return res.json(jsonHelper.getSuccess(x.join('\n')));
-    }
     var result = shell.tail({
         '-n': line
     }, filename);
-    cache.set(name, result.split('\n'), true);
     res.json(jsonHelper.getSuccess(result));
 };
 
