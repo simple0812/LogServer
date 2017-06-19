@@ -9,7 +9,6 @@ var config = require('./config');
 var logger = require('./utils/logger');
 var websocket = require('./websocket');
 
-// require('./socket');
 app.set('views', "" + __dirname + "/views");
 app.set('view engine', 'html');
 app.engine('html', engine);

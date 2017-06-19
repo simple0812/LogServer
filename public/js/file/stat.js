@@ -52,6 +52,14 @@
                  backgroundColor: 'rgba(255, 206, 86, 0.2)',
                  borderColor: 'rgba(255, 206, 86, 1)',
                  borderWidth: 1,
+                 yAxisID: '1y'
+             }, {
+                 label: '# flag',
+                 pointRadius: 0,
+                 data: xdata.flag || [],
+                 backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                 borderColor: 'rgba(0, 0, 0, 1)',
+                 borderWidth: 1,
                  yAxisID: '2y'
              }]
          },

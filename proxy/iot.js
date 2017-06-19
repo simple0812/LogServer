@@ -39,7 +39,8 @@ exports.resolve04Temperature = function(name, step, max, min, startTime, endTime
             time: [],
             temperature: [],
             temperature2: [],
-            temperature3: []
+            temperature3: [],
+            flag: []
         };
         var index = 0;
         rl.on('line', function(line) {
@@ -153,19 +154,22 @@ exports.resolve09Temperature = function(name, step, max, min, startTime, endTime
                 time: [],
                 temperature: [],
                 temperature2: [],
-                temperature3: []
+                temperature3: [],
+                flag: []
             },
             sa0: {
                 time: [],
                 temperature: [],
                 temperature2: [],
-                temperature3: []
+                temperature3: [],
+                flag: []
             },
             sa1: {
                 time: [],
                 temperature: [],
                 temperature2: [],
-                temperature3: []
+                temperature3: [],
+                flag: []
             }
         };
 
@@ -204,6 +208,7 @@ exports.resolve09Temperature = function(name, step, max, min, startTime, endTime
                     xdata['s' + x.s].temperature.push(x.data);
                     xdata['s' + x.s].temperature2.push(x.data2);
                     xdata['s' + x.s].temperature3.push(x.data3);
+                    xdata['s' + x.s].flag.push(x.flag);
                 }
             }
         });
@@ -237,6 +242,8 @@ function resolve09Str(str, max, min, exclude) {
             ret.data2 = parseInt(data[0].slice(13, 19).split(',').join(''), 16) / 10;
         if (exclude.indexOf(3) == -1)
             ret.data3 = parseInt(data[0].slice(19, 25).split(',').join(''), 16) / 10;
+
+        ret.flag = parseInt(data[0].slice(32, 34).split(',').join(''), 16);
     }
 
     if (ret.time &&
