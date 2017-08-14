@@ -58,14 +58,16 @@ var WebSocketServer = require('ws').Server;
 global.wss = new WebSocketServer({ server: server });
 wss.broadcast = function broadcast(data) {
     wss.clients.forEach(function each(client) {
-        client.send(data);
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(data);
+        }
     });
 }
 
 wss.broadcastTo = function(data, name) {
     if (!data) return;
     wss.clients.forEach(function(client) {
-        if (client.xname === name)
+        if (client.xname === name && client.readyState === WebSocket.OPEN)
             client.send(data);
     });
 }
