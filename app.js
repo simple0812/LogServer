@@ -54,6 +54,7 @@ var xPort = process.env.LOG_PORT || config.PORT;
 // });
 
 var server = http.createServer(app);
+var WebSocket = require('ws');
 var WebSocketServer = require('ws').Server;
 global.wss = new WebSocketServer({ server: server });
 wss.broadcast = function broadcast(data) {
